@@ -15,7 +15,7 @@ const Browse = () => {
     return () => {
       dispatch(setSearchedQuery(""));
     };
-  }, []);
+  }, [allJobs]);
   return (
     <div>
       <Navbar />
