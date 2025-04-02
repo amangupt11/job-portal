@@ -3,7 +3,6 @@ import { login, logout, register, updateProfile } from "../controllers/user.cont
 import isAuthenticated from "../midddlewares/isAuthenticated.js";
 import { singleUpload } from "../midddlewares/multer.js";
  
-
 const router = express.Router();
 
 router.route("/register").post(singleUpload,register);

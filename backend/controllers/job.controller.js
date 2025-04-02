@@ -1,6 +1,5 @@
 import { Job } from "../models/job.model.js";
 
-
 export const postJob = async (req, res) => {
     try {
         const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
@@ -92,7 +91,7 @@ export const getAllJobs = async (req, res) => {
         }).sort({ createdAt: -1 });
         if (!jobs) {
             return res.status(404).json({
-                message: "Jobs not found.",
+                message: "Jobs not found..",
                 success: false
             })
         };
@@ -113,7 +112,7 @@ export const getJobById = async (req, res) => {
         });
         if (!job) {
             return res.status(404).json({
-                message: "Jobs not found.",
+                message: "Jobs not found",
                 success: false
             })
         };

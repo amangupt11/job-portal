@@ -35,9 +35,6 @@ const Signup = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
-
-        // const file = event.target.files?.[0];
-        // if(!file) return ;
         const formData = new FormData();    
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
@@ -46,8 +43,6 @@ const Signup = () => {
         formData.append("role", input.role);
         if (input.file) {
             formData.append("file", input.file);
-         // formData.append("upload_preset","------");
-         // formData.append("cloud_name","djm2fkdm1");
         }
 
         try {

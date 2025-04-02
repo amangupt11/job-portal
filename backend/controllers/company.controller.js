@@ -80,7 +80,7 @@ export const updateCompany = async (req, res) => {
         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!company) {
             return res.status(404).json({
-                message: "Company not found.",
+                message: "Company not found..",
                 success: false
             })
         }

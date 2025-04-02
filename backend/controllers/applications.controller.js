@@ -78,7 +78,7 @@ export const getApplicants = async (req,res) => {
         });
         if(!job){
             return res.status(404).json({
-                message:'Job not found.',
+                message:'Job not found..',
                 success:false
             })
         };

@@ -3,7 +3,7 @@ import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import {
 //   Select,
 //   SelectContent,
@@ -17,6 +17,7 @@ import { JOB_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import { setSingleJob } from "@/redux/jobSlice";
 
 const UpdateJob = () => {
   const [input, setInput] = useState({
@@ -32,6 +33,7 @@ const UpdateJob = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { singleJob } = useSelector((store) => store.job);
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -61,6 +63,7 @@ const UpdateJob = () => {
         }
       );
       if (res.data.success) {
+        dispatch(setSingleJob(res.data.job));
         toast.success(res.data.message);
         navigate("/admin/jobs");
       }
@@ -151,7 +154,7 @@ const UpdateJob = () => {
               <Label>Job Type</Label>
               <select name="jobType"  value={input.jobType} onChange={changeEventHandler} className="w-full p-2 border rounded-lg">
                 <option value={""} disabled selected>
-                  Select a Job Type
+                  None
                 </option>
                 <option value={"Full Time"}>Full Time</option>
                 <option value={"Part Time"}>Part Time</option>
@@ -178,27 +181,6 @@ const UpdateJob = () => {
                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
               />
             </div>
-            {/* {companies.length > 0 && (
-              <Select onValueChange={handleValueChange}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select Company" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {companies.map((company) => {
-                      return (
-                        <SelectItem
-                          key={company._id}
-                          value={company?.name?.toLowerCase()}
-                        >
-                          {company.name}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )} */}
           </div>
           {loading ? (
             <Button className="w-full my-4">
