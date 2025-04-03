@@ -6,7 +6,8 @@ const getDataUri = (file) => {
     if (!file) {
         throw new Error('File is not provided');
     }
-    const extName = path.extname(file.originalname).toString();
+    const extName = path.extname(`${Date.now()}-${file.originalname}`).toString();
     return parser.format(extName, file.buffer);
 }
 export default getDataUri;
+
