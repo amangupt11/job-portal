@@ -125,12 +125,6 @@ export const updateProfile = async (req, res) => {
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content,{
       resource_type: "raw"
-    },function(error, result) {
-      if (error) {
-        alert("Error: " + error.message);
-      } else {
-        alert("Upload successful! File URL: " + result.secure_url);
-      }
     }
   );
 
