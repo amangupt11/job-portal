@@ -123,10 +123,7 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: 'No Resume uploaded' , success: false});
     }
     const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content,{
-      resource_type: "raw"
-    }
-  );
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
     let skillsArray;
     if (skills) {
