@@ -52,7 +52,7 @@ const UpdateJob = () => {
     formData.append("position", input.position);
     try {
       setLoading(true);
-      console.log("formdata",formData);
+      console.log("formdata",params.id);
       const res = await axios.put(
         `${JOB_API_END_POINT}/update/${params.id}`,
         formData,
