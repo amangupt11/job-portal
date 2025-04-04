@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Navbar from "../shared/Navbar";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
+import Navbar from "../shared/Navbar";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 // import {
 //   Select,
 //   SelectContent,
@@ -12,12 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 //   SelectTrigger,
 //   SelectValue,
 // } from "../ui/select";
-import axios from "axios";
-import { JOB_API_END_POINT } from "@/utils/constant";
-import { toast } from "sonner";
-import { useNavigate, useParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 import { setSingleJob } from "@/redux/jobSlice";
+import { JOB_API_END_POINT } from "@/utils/constant";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const UpdateJob = () => {
   const [input, setInput] = useState({
@@ -75,6 +75,19 @@ const UpdateJob = () => {
     }
   };
   useEffect(() => {
+    const jobData = async()=>{
+      try {
+        const res = await axios.get(`${JOB_API_END_POINT}/get/${params.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        console.log(res.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
     setInput({
         title: singleJob?.title || "",
         description: singleJob?.description || "",
