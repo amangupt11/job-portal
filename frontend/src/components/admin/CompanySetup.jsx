@@ -103,7 +103,7 @@ const CompanySetup = () => {
               />
             </div>
             <div>
-              <Label>Company Description</Label>
+              <Label>Company Description.......</Label>
               <Input
                 type="text"
                 name="description"
