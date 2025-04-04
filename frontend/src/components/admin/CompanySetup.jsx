@@ -67,15 +67,17 @@ const CompanySetup = () => {
   };
 
   useEffect(() => {
-    setInput({
-      name: singleCompany.name || "",
-      description: singleCompany.description || "",
-      website: singleCompany.website || "",
-      location: singleCompany.location || "",
-      file: singleCompany.file || null,
-    });
+    if (singleCompany) {
+      setInput({
+        name: singleCompany.name || "",
+        description: singleCompany.description || "",
+        website: singleCompany.website || "",
+        location: singleCompany.location || "",
+        file: singleCompany.file || null,
+      });
+    }
   }, [singleCompany]);
-
+  
   return (
     <div>
       <Navbar />
@@ -103,7 +105,7 @@ const CompanySetup = () => {
               />
             </div>
             <div>
-              <Label>Company Description.......</Label>
+              <Label>Company Description</Label>
               <Input
                 type="text"
                 name="description"
