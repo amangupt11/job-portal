@@ -26,14 +26,16 @@ const Navbar = () => {
             toast.error(error.response.data.message);
         }
     }
+
     return (
         <div className='bg-white'>
-            <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
-                <div>
+            <div className='flex flex-col sm:flex-row items-center justify-between px-4 md:px-6 lg:px-8 mx-auto max-w-7xl h-auto sm:h-16 py-4 sm:py-0'>
+                <div className='mb-2 sm:mb-0'>
                     <h1 className='text-2xl font-bold'>Job<span className='text-[#F83002]'>Portal</span></h1>
                 </div>
-                <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5'>
+
+                <div className='flex flex-col sm:flex-row sm:items-center sm:gap-12 w-full sm:w-auto'>
+                    <ul className='flex flex-col sm:flex-row font-medium items-start sm:items-center gap-3 sm:gap-5 mb-4 sm:mb-0'>
                         {
                             user && user.role === 'recruiter' ? (
                                 <>
@@ -49,51 +51,59 @@ const Navbar = () => {
                             )
                         }
                     </ul>
-                    {
-                        !user ? (
-                            <div className='flex items-center gap-2'>
-                                <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
-                                <Link to="/"></Link>
-                            </div>
-                        ) : (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Avatar className="cursor-pointer">
-                                        <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
-                                    </Avatar>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-80">
-                                    <div className=''>
-                                        <div className='flex gap-2 space-y-2'>
-                                            <Avatar className="cursor-pointer">
-                                                <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
-                                            </Avatar>
-                                            <div>
-                                                <h4 className='font-medium'>{user?.fullname}</h4>
-                                                <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
-                                            </div>
-                                        </div>
-                                        <div className='flex flex-col my-2 text-gray-600'>
-                                            {
-                                                user && user.role === 'student' && (
-                                                    <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                        <User2 />
-                                                        <Button variant="link"> <Link to="/profile">View Profile</Link></Button>
-                                                    </div>
-                                                )
-                                            }
 
-                                            <div className='flex w-fit items-center gap-2 cursor-pointer'>
-                                                <LogOut />
-                                                <Button onClick={logoutHandler} variant="link">Logout</Button>
+                    <div className='flex items-center gap-2 justify-start sm:justify-end'>
+                        {
+                            !user ? (
+                                <>
+                                    <Link to="/login">
+                                        <Button variant="outline" className="w-full sm:w-auto">Login</Button>
+                                    </Link>
+                                    <Link to="/signup">
+                                        <Button className="bg-[#6A38C2] hover:bg-[#5b30a6] w-full sm:w-auto">Signup</Button>
+                                    </Link>
+                                </>
+                            ) : (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Avatar className="cursor-pointer">
+                                            <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                        </Avatar>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-72 sm:w-80">
+                                        <div className=''>
+                                            <div className='flex gap-2 space-y-2'>
+                                                <Avatar className="cursor-pointer">
+                                                    <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                                                </Avatar>
+                                                <div>
+                                                    <h4 className='font-medium'>{user?.fullname}</h4>
+                                                    <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
+                                                </div>
+                                            </div>
+                                            <div className='flex flex-col my-2 text-gray-600'>
+                                                {
+                                                    user && user.role === 'student' && (
+                                                        <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                            <User2 />
+                                                            <Button variant="link">
+                                                                <Link to="/profile">View Profile</Link>
+                                                            </Button>
+                                                        </div>
+                                                    )
+                                                }
+
+                                                <div className='flex w-fit items-center gap-2 cursor-pointer'>
+                                                    <LogOut />
+                                                    <Button onClick={logoutHandler} variant="link">Logout</Button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-                        )
-                    }
+                                    </PopoverContent>
+                                </Popover>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>

@@ -34,6 +34,7 @@ const PostJob = () => {
   const navigate = useNavigate();
 
   const { companies } = useSelector((store) => store.company);
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -69,12 +70,13 @@ const PostJob = () => {
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center w-screen my-5">
+      <div className="flex items-center justify-center w-full px-4 sm:px-6 lg:px-8 my-5">
         <form
           onSubmit={submitHandler}
-          className="p-8 max-w-4xl border border-gray-200 shadow-lg rounded-md"
+          className="w-full max-w-5xl p-6 sm:p-8 border border-gray-200 shadow-lg rounded-md"
         >
-          <div className="grid grid-cols-2 gap-2">
+          <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">Post a New Job</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label>Title</Label>
               <Input
@@ -117,8 +119,13 @@ const PostJob = () => {
             </div>
             <div>
               <Label>Location</Label>
-              <select name="location"  value={input.location} onChange={changeEventHandler} className="w-full p-2 border rounded-lg">
-                <option value="" disabled selected>
+              <select
+                name="location"
+                value={input.location}
+                onChange={changeEventHandler}
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
                   Select a Location
                 </option>
                 <option value="Delhi NCR">Delhi NCR</option>
@@ -131,13 +138,18 @@ const PostJob = () => {
             </div>
             <div>
               <Label>Job Type</Label>
-              <select name="jobType"  value={input.jobType} onChange={changeEventHandler} className="w-full p-2 border rounded-lg">
-                <option value={""} disabled selected>
+              <select
+                name="jobType"
+                value={input.jobType}
+                onChange={changeEventHandler}
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
                   Select a Job Type
                 </option>
-                <option value={"Full Time"}>Full Time</option>
-                <option value={"Part Time"}>Part Time</option>
-                <option value={"Remote"}>Remote</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Remote">Remote</option>
               </select>
             </div>
             <div>
@@ -161,37 +173,40 @@ const PostJob = () => {
               />
             </div>
             {companies.length > 0 && (
-              <Select onValueChange={selectChangeHandler}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select Company" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {companies.map((company) => {
-                      return (
+              <div className="md:col-span-2">
+                <Label>Select Company</Label>
+                <Select onValueChange={selectChangeHandler}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Company" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {companies.map((company) => (
                         <SelectItem
                           key={company._id}
                           value={company?.name?.toLowerCase()}
                         >
                           {company.name}
                         </SelectItem>
-                      );
-                    })}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             )}
           </div>
+
           {loading ? (
-            <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            <Button className="w-full my-6">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
             </Button>
           ) : (
-            <Button type="submit" className="w-full my-4">
+            <Button type="submit" className="w-full my-6">
               Post New Job
             </Button>
           )}
+
           {companies.length === 0 && (
             <p className="text-xs text-red-600 font-bold text-center my-3">
               Please register a company first, before posting a job.

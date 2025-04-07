@@ -24,6 +24,7 @@ const CompanySetup = () => {
   const { singleCompany } = useSelector((store) => store.company);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -77,14 +78,16 @@ const CompanySetup = () => {
       });
     }
   }, [singleCompany]);
-  
+
   return (
     <div>
       <Navbar />
-      <div className="max-w-xl mx-auto my-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <form onSubmit={submitHandler}>
-          <div className="flex items-center gap-5 p-8">
+          {/* Top Header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-8">
             <Button
+              type="button"
               onClick={() => navigate("/admin/companies")}
               variant="outline"
               className="flex items-center gap-2 text-gray-500 font-semibold"
@@ -92,9 +95,11 @@ const CompanySetup = () => {
               <ArrowLeft />
               <span>Back</span>
             </Button>
-            <h1 className="font-bold text-xl">Company Setup</h1>
+            <h1 className="font-bold text-2xl">Company Setup</h1>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Form Inputs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label>Company Name</Label>
               <Input
@@ -124,8 +129,15 @@ const CompanySetup = () => {
             </div>
             <div>
               <Label>Location</Label>
-              <select name="location" value={input.location} onChange={changeEventHandler} className="w-full p-2 border rounded-lg">
-                <option value="" disabled selected>Select a Location</option>
+              <select
+                name="location"
+                value={input.location}
+                onChange={changeEventHandler}
+                className="w-full p-2 border rounded-lg"
+              >
+                <option value="" disabled>
+                  Select a Location
+                </option>
                 <option value="Delhi NCR">Delhi NCR</option>
                 <option value="Bangalore">Bangalore</option>
                 <option value="Hyderabad">Hyderabad</option>
@@ -133,12 +145,6 @@ const CompanySetup = () => {
                 <option value="Mumbai">Mumbai</option>
                 <option value="Gurugram">Gurugram</option>
               </select>
-              {/* <Input
-                type="text"
-                name="location"
-                value={input.location}
-                onChange={changeEventHandler}
-              /> */}
             </div>
             <div>
               <Label>Logo</Label>
@@ -149,13 +155,14 @@ const CompanySetup = () => {
               />
             </div>
           </div>
+
+          {/* Submit Button */}
           {loading ? (
-            <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            <Button className="w-full my-6">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
             </Button>
           ) : (
-            <Button type="submit" className="w-full my-4">
+            <Button type="submit" className="w-full my-6">
               Update
             </Button>
           )}

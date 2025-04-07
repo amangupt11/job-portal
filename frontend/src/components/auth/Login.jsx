@@ -20,12 +20,14 @@ const Login = () => {
     password: "",
     role: "",
   });
-  const { loading,user } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const changeEventHandler = (e) => {
-    setInput({...input, [e.target.name]: e.target.value});
+    setInput({ ...input, [e.target.name]: e.target.value });
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -47,23 +49,24 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
+
   useEffect(() => {
-    if(user){
+    if (user) {
       navigate("/");
     }
-  },[]);
+  }, []);
 
   return (
     <div>
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto">
+      <div className="flex items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <form
           onSubmit={submitHandler}
-          className="w-1/2 border border-gray-200 rounded-md p-4 my-10"
+          className="w-full sm:w-4/5 md:w-3/4 lg:w-1/2 border border-gray-200 rounded-md p-4 sm:p-6 my-10"
         >
-          <h1 className="font-bold text-xl mb-5">Login</h1>
+          <h1 className="font-bold text-xl mb-5 text-center">Login</h1>
 
-          <div className="my-2 ">
+          <div className="my-2">
             <Label>Email</Label>
             <Input
               type="email"
@@ -74,7 +77,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="my-2 ">
+          <div className="my-2">
             <Label>Password</Label>
             <Input
               type="password"
@@ -84,8 +87,10 @@ const Login = () => {
               onChange={changeEventHandler}
             />
           </div>
-          <div className="flex items-center justify-between">
-            <RadioGroup className="flex items-center gap-4 my-5">
+
+          <div className="my-4">
+            <Label className="block mb-2">Role</Label>
+            <RadioGroup className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex items-center space-x-2">
                 <Input
                   type="radio"
@@ -110,10 +115,10 @@ const Login = () => {
               </div>
             </RadioGroup>
           </div>
+
           {loading ? (
-            <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait{" "}
+            <Button className="w-full my-4" disabled>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
             </Button>
           ) : (
             <Button type="submit" className="w-full my-4">
@@ -121,9 +126,9 @@ const Login = () => {
             </Button>
           )}
 
-          <span className="text-sm">
+          <span className="text-sm block text-center">
             Don&apos;t have an account?{" "}
-            <Link to="/signup" className="text-blue-900">
+            <Link to="/signup" className="text-blue-900 underline">
               Signup
             </Link>
           </span>
