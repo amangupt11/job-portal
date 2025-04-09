@@ -27,8 +27,6 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [showMenu, setShowMenu] = useState(false); 
-
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -73,27 +71,8 @@ const Signup = () => {
   }, []);
 
   return (
-    <div className="relative">
-      <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="p-2 m-4 rounded-md border shadow-sm fixed top-2 left-2 z-50 bg-white md:hidden"
-      >
-        ☰
-      </button>
-
-      {/* Mobile: Navbar visible only when toggled */}
-      {showMenu && (
-        <div className="md:hidden">
-          <Navbar />
-        </div>
-      )}
-
-      {/* Desktop: Navbar always visible */}
-      <div className="hidden md:block">
-        <Navbar />
-      </div>
-
-      {/* Signup Form */}
+    <div>
+      <Navbar />
       <div className='flex items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <form
           onSubmit={submitHandler}

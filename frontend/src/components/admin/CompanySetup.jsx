@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Label } from "../ui/label";
@@ -81,7 +80,6 @@ const CompanySetup = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <form onSubmit={submitHandler}>
           {/* Top Header */}

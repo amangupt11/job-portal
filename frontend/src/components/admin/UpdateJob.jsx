@@ -4,7 +4,6 @@ import React, { use, useEffect, useState } from "react";
 import { JOB_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -65,14 +64,13 @@ const UpdateJob = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="flex items-center justify-center w-full px-4 sm:px-6 lg:px-8 my-5">
         <form
           onSubmit={submitHandler}
           className="w-full max-w-5xl p-6 sm:p-8 border border-gray-200 shadow-lg rounded-md"
         >
           <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
-            Post a New Job
+            Update a Job
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -178,7 +176,7 @@ const UpdateJob = () => {
             </Button>
           ) : (
             <Button type="submit" className="w-full my-6">
-              Update Job
+              Update 
             </Button>
           )}
         </form>
