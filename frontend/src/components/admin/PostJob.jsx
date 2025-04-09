@@ -201,7 +201,7 @@ const PostJob = () => {
             </Button>
           ) : (
             <Button type="submit" className="w-full my-6">
-              Post New Job
+              Post Job
             </Button>
           )}
 
