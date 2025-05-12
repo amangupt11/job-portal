@@ -15,7 +15,7 @@ import axios from "axios";
 import { JOB_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 
 const PostJob = () => {
   const [input, setInput] = useState({
@@ -35,7 +35,8 @@ const PostJob = () => {
   const { companies } = useSelector((store) => store.company);
 
   const changeEventHandler = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
   };
 
   const selectChangeHandler = (value) => {
@@ -73,17 +74,39 @@ const PostJob = () => {
           onSubmit={submitHandler}
           className="w-full max-w-5xl p-6 sm:p-8 border border-gray-200 shadow-lg rounded-md"
         >
-          <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">Post a New Job</h1>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-8">
+            <Button
+              type="button"
+              onClick={() => navigate("/admin/jobs")}
+              variant="outline"
+              className="flex items-center gap-2 text-gray-500 font-semibold"
+            >
+              <ArrowLeft />
+              <span>Back</span>
+            </Button>
+            <h1 className="font-bold text-2xl">Job Posting Setup</h1>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label>Title</Label>
-              <Input
-                type="text"
+              <select
                 name="title"
                 value={input.title}
                 onChange={changeEventHandler}
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-              />
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
+                  Select 
+                </option>
+                <option value="Frontend Developer">Frontend Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+                <option value="FullStack Developer">FullStack Developer</option>
+                <option value="Data Science engineer">Data Science engineer</option>
+                <option value="AI/ML engineer">AI/ML engineer</option>
+                <option value="UI/UX Developer">UI/UX Developer</option>
+                <option value="Graphic Designer">Graphic Designer</option>
+                <option value="Android Developer">Android Developer</option>
+              </select>
             </div>
             <div>
               <Label>Job Description</Label>
@@ -106,7 +129,7 @@ const PostJob = () => {
               />
             </div>
             <div>
-              <Label>Salary</Label>
+              <Label>Salary (CTC)</Label>
               <Input
                 type="text"
                 name="salary"
@@ -114,6 +137,7 @@ const PostJob = () => {
                 onChange={changeEventHandler}
                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
               />
+               <p className="text-sm text-gray-500 mt-1">Salary support in LPA</p>
             </div>
             <div>
               <Label>Location</Label>
@@ -124,14 +148,13 @@ const PostJob = () => {
                 className="w-full p-2 border rounded-lg my-1"
               >
                 <option value="" disabled>
-                  Select a Location
+                  Select
                 </option>
-                <option value="Delhi NCR">Delhi NCR</option>
                 <option value="Bangalore">Bangalore</option>
                 <option value="Hyderabad">Hyderabad</option>
                 <option value="Pune">Pune</option>
-                <option value="Mumbai">Mumbai</option>
                 <option value="Gurugram">Gurugram</option>
+                <option value="Chennai">Chennai</option>
               </select>
             </div>
             <div>
@@ -143,7 +166,7 @@ const PostJob = () => {
                 className="w-full p-2 border rounded-lg my-1"
               >
                 <option value="" disabled>
-                  Select a Job Type
+                  Select
                 </option>
                 <option value="Full Time">Full Time</option>
                 <option value="Part Time">Part Time</option>
@@ -152,18 +175,26 @@ const PostJob = () => {
             </div>
             <div>
               <Label>Experience Level</Label>
-              <Input
-                type="text"
+              <select
                 name="experience"
                 value={input.experience}
                 onChange={changeEventHandler}
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-              />
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="Fresher">Fresher</option>
+                <option value="0 - 2 Years">0 - 2 Years</option>
+                <option value="2 - 5 Years">2 - 5 Years</option>
+                <option value="5 -10 Years">5 -10 Years</option>
+                <option value="10+ Years">10+ Years</option>
+              </select>
             </div>
             <div>
-              <Label>No. of Positions</Label>
+              <Label>No. of Opening Positions</Label>
               <Input
-                type="number"
+                type="text"
                 name="position"
                 value={input.position}
                 onChange={changeEventHandler}
@@ -206,9 +237,9 @@ const PostJob = () => {
           )}
 
           {companies.length === 0 && (
-            <p className="text-xs text-red-600 font-bold text-center my-3">
-              Please register a company first, before posting a job.
-            </p>
+            <h1 className=" text-red-600 font-bold text-center my-3">
+              Please register a company, before posting a job.
+            </h1>
           )}
         </form>
       </div>

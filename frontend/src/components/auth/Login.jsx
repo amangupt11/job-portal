@@ -12,14 +12,21 @@ import { toast } from "sonner";
 import { USER_API_END_POINT } from "@/utils/constant.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice.js";
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+
+
 
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     role: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,16 +35,34 @@ const Login = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
+  const doPasswordsMatch = input.password === input.confirmPassword;
+
+  const canSubmit =
+    input.email &&
+    input.password &&
+    input.confirmPassword &&
+    doPasswordsMatch &&
+    input.role;
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch(setLoading(true));
-      const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-        headers: {
-          "Content-Type": "application/json",
+      const res = await axios.post(
+        `${USER_API_END_POINT}/login`,
+        {
+          email: input.email,
+          password: input.password,
+          role: input.role,
         },
-        withCredentials: true,
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
       if (res.data.success) {
         dispatch(setUser(res.data.user));
         navigate("/");
@@ -79,13 +104,51 @@ const Login = () => {
 
           <div className="my-2">
             <Label>Password</Label>
-            <Input
-              type="password"
-              placeholder="Enter password"
-              value={input.password}
-              name="password"
-              onChange={changeEventHandler}
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter password"
+                value={input.password}
+                name="password"
+                onChange={changeEventHandler}
+              />
+              <div
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </div>
+            </div>
+          </div>
+
+          <div className="my-2">
+            <Label>Confirm Password</Label>
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm password"
+                value={input.confirmPassword}
+                name="confirmPassword"
+                onChange={changeEventHandler}
+              />
+              <div
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </div>
+            </div>
+            {input.confirmPassword && (
+              <p
+                className={`text-sm mt-1 ${
+                  doPasswordsMatch ? "text-green-600" : "text-red-500"
+                }`}
+              >
+                {doPasswordsMatch
+                  ? "Passwords match ✅"
+                  : "Passwords do not match ❌"}
+              </p>
+            )}
           </div>
 
           <div className="my-4">
@@ -121,7 +184,7 @@ const Login = () => {
               <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
             </Button>
           ) : (
-            <Button type="submit" className="w-full my-4">
+            <Button type="submit" className="w-full my-4" disabled={!canSubmit}>
               Login
             </Button>
           )}

@@ -9,23 +9,24 @@ export const register = async (req, res) => {
     const { fullname, email, phoneNumber, password, role } = req.body;
     if (!fullname || !email || !phoneNumber || !password || !role) {
       return res.status(400).json({
-        message: "Something is missing",
+        message: "All fields are required.",
         success: false,
       });
     }
     const file = req.file;
     if (!file) {
-      return res.status(400).json({ message: 'No file uploaded' , success: false});
+      return res.status(400).json({ message: 'Please , upload a profile pic' , success: false});
     }
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({
-        message: "User already exist with this email.",
+        message: "User already exist , Please login.",
         success: false,
       });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     await User.create({
       fullname,
@@ -46,12 +47,13 @@ export const register = async (req, res) => {
     console.log(error);
   }
 };
+
 export const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
     if (!email || !password || !role) {
       return res.status(400).json({
-        message: "Something is missing.",
+        message: "All fields are required.",
         success: false,
       });
     }
@@ -79,7 +81,7 @@ export const login = async (req, res) => {
       userId: user._id,
     };
     const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {
-      expiresIn: "1d",
+      expiresIn: "3d",
     });
     user = {
       _id: user._id,
@@ -115,20 +117,22 @@ export const logout = async (req, res) => {
     console.log(error);
   }
 };
+
 export const updateProfile = async (req, res) => {
   try {
     const { fullname, email, phoneNumber, bio, skills } = req.body;
     const file = req.file;
-    if (!file) {
-      return res.status(400).json({ message: 'No Resume uploaded' , success: false});
-    }
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-    let skillsArray;
-    if (skills) {
-      skillsArray = skills.split(",");
+    let resumeUrl = null;
+    let resumeName = null;
+    // Only upload to Cloudinary if resume file is provided
+    if (file) {
+      const fileUri = getDataUri(file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      resumeUrl = cloudResponse.secure_url;
+      resumeName = file.originalname;
     }
+
     const userId = req.id;
     let user = await User.findById(userId);
     if (!user) {
@@ -137,17 +141,22 @@ export const updateProfile = async (req, res) => {
         success: false,
       });
     }
-    if(fullname) user.fullname = fullname;
-    if(email) user.email = email;
-    if(phoneNumber) user.phoneNumber = phoneNumber;
-    if(bio) user.profile.bio = bio;
-    if(skills) user.profile.skills = skillsArray;
-    if (cloudResponse) {
-      user.profile.resume = cloudResponse.secure_url;
-      user.profile.resumeOriginalName = file.originalname;
+
+    // Update only provided fields
+    if (fullname) user.fullname = fullname;
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+
+    if (bio) user.profile.bio = bio;
+    if (skills) user.profile.skills = skills.split(",").map(s => s.trim());
+    if (resumeUrl && resumeName) {
+      user.profile.resume = resumeUrl;
+      user.profile.resumeOriginalName = resumeName;
     }
+
     await user.save();
-    user = {
+
+    const responseUser = {
       _id: user._id,
       fullname: user.fullname,
       email: user.email,
@@ -158,10 +167,15 @@ export const updateProfile = async (req, res) => {
 
     return res.status(200).json({
       message: "Profile updated successfully.",
-      user,
+      user: responseUser,
       success: true,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error updating profile:", error);
+    return res.status(500).json({
+      message: "Something went wrong while updating profile.",
+      success: false,
+    });
   }
 };
+

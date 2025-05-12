@@ -32,36 +32,36 @@ const CompaniesTable = () => {
   }, [companies, searchCompanyByText]);
 
   return (
-    <div className="w-full overflow-x-auto">
-      <Table className="min-w-[600px]">
-        <TableCaption>A list of your registered companies.</TableCaption>
+    <div className="w-full overflow-x-auto px-2 md:px-6">
+      <Table className="min-w-[600px] text-sm md:text-base">
+        <TableCaption className="text-xs md:text-sm">A list of your registered companies.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Logo</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className="whitespace-nowrap">Logo</TableHead>
+            <TableHead className="whitespace-nowrap">Name</TableHead>
+            <TableHead className="whitespace-nowrap">Date</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filterCompany?.map((company) => (
-            <tr key={company._id}>
+            <TableRow key={company._id} className="hover:bg-muted/50 transition">
               <TableCell>
-                <Avatar>
+                <Avatar className="h-8 w-8 md:h-10 md:w-10">
                   <AvatarImage src={company.logo} />
                 </Avatar>
               </TableCell>
-              <TableCell>{company.name}</TableCell>
-              <TableCell>{company.createdAt.split('T')[0]}</TableCell>
-              <TableCell className="text-right cursor-pointer">
+              <TableCell className="whitespace-nowrap">{company.name}</TableCell>
+              <TableCell className="whitespace-nowrap">{company.createdAt.split('T')[0]}</TableCell>
+              <TableCell className="text-right">
                 <Popover>
-                  <PopoverTrigger>
-                    <MoreHorizontal />
+                  <PopoverTrigger className="p-2 hover:bg-accent rounded">
+                    <MoreHorizontal className="w-5 h-5" />
                   </PopoverTrigger>
                   <PopoverContent className="w-32">
                     <div
                       onClick={() => navigate(`/admin/companies/${company._id}`)}
-                      className="flex items-center gap-2 w-fit cursor-pointer"
+                      className="flex items-center gap-2 w-fit cursor-pointer hover:text-primary"
                     >
                       <Edit2 className="w-4" />
                       <span>Edit</span>
@@ -69,12 +69,12 @@ const CompaniesTable = () => {
                   </PopoverContent>
                 </Popover>
               </TableCell>
-            </tr>
+            </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
   );
-};
+}; 
 
 export default CompaniesTable;

@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux'
                 try {
                     const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
                     if(res.data.success){
-                        dispatch(setSingleJob(res.data.company));
+                        dispatch(setSingleJob(res.data.job));
                     }
                 } catch (error) {
                     console.log(error);

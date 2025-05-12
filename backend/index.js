@@ -9,18 +9,20 @@ import jobRoute from "./routes/job.route.js";
 import applicantionRoute from "./routes/application.route.js";
 import path from "path";
 
+
 dotenv.config({});
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const _dirname = path.resolve();
 
+
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 const corsOptions = {
-    origin:'https://jobportal-aman.onrender.com',
+    origin:'http://localhost:5173',
     credentials:true
 }
 app.use(cors(corsOptions));

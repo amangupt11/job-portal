@@ -36,13 +36,42 @@ const CompanySetup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("name", input.name);
-    formData.append("description", input.description);
-    formData.append("website", input.website);
-    formData.append("location", input.location);
+
+    // Compare with original values and only add if changed
+    if (input.name.trim() && input.name !== singleCompany.name) {
+      formData.append("name", input.name);
+    }
+
+    if (
+      input.description.trim() &&
+      input.description !== singleCompany.description
+    ) {
+      formData.append("description", input.description);
+    }
+
+    if (input.website.trim() && input.website !== singleCompany.website) {
+      formData.append("website", input.website);
+    }
+
+    if (input.location.trim() && input.location !== singleCompany.location) {
+      formData.append("location", input.location);
+    }
+
     if (input.file) {
       formData.append("file", input.file);
     }
+
+    if (
+      !formData.has("name") &&
+      !formData.has("description") &&
+      !formData.has("website") &&
+      !formData.has("location") &&
+      !formData.has("file")
+    ) {
+      toast.error("No changes to update");
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await axios.put(
@@ -55,12 +84,13 @@ const CompanySetup = () => {
           withCredentials: true,
         }
       );
+
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/admin/companies");
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -134,14 +164,13 @@ const CompanySetup = () => {
                 className="w-full p-2 border rounded-lg"
               >
                 <option value="" disabled>
-                  Select a Location
+                  Select
                 </option>
-                <option value="Delhi NCR">Delhi NCR</option>
                 <option value="Bangalore">Bangalore</option>
                 <option value="Hyderabad">Hyderabad</option>
                 <option value="Pune">Pune</option>
-                <option value="Mumbai">Mumbai</option>
                 <option value="Gurugram">Gurugram</option>
+                <option value="Chennai">Chennai</option>
               </select>
             </div>
             <div>

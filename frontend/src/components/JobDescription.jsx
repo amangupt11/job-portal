@@ -85,7 +85,7 @@ const JobDescription = () => {
                 <p><span className="font-bold">Location:</span> <span className="pl-2 text-gray-800">{singleJob?.location}</span></p>
                 <p><span className="font-bold">Description:</span> <span className="pl-2 text-gray-800">{singleJob?.description}</span></p>
                 <p><span className="font-bold">Requirements:</span> <span className="pl-2 text-gray-800">{singleJob?.requirements}</span></p>
-                <p><span className="font-bold">Experience:</span> <span className="pl-2 text-gray-800">{singleJob?.experienceLevel} yrs</span></p>
+                <p><span className="font-bold">Experience:</span> <span className="pl-2 text-gray-800">{singleJob?.experienceLevel} </span></p>
                 <p><span className="font-bold">Salary:</span> <span className="pl-2 text-gray-800">{singleJob?.salary} LPA</span></p>
                 <p><span className="font-bold">Total Applicants:</span> <span className="pl-2 text-gray-800">{singleJob?.applications?.length}</span></p>
                 <p><span className="font-bold">Posted Date:</span> <span className="pl-2 text-gray-800">{singleJob?.createdAt?.split("T")[0]}</span></p>

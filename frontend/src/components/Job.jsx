@@ -1,18 +1,44 @@
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Bookmark } from 'lucide-react';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Job = ({ job }) => {
   const navigate = useNavigate();
+  const [saved, setSaved] = useState(false);
+
+  // Load saved state on mount
+  useEffect(() => {
+    const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+    setSaved(savedJobs.includes(job._id));
+  }, [job._id]);
+
+  // Toggle save/unsave
+  const toggleSave = () => {
+    const savedJobs = JSON.parse(localStorage.getItem('savedJobs') || '[]');
+
+    if (saved) {
+      const updated = savedJobs.filter(id => id !== job._id);
+      localStorage.setItem('savedJobs', JSON.stringify(updated));
+      setSaved(false);
+      toast.success('Removed from saved');
+    } else {
+      savedJobs.push(job._id);
+      localStorage.setItem('savedJobs', JSON.stringify(savedJobs));
+      setSaved(true);
+      toast.success('Saved for later');
+    }
+  };
 
   const daysAgoFunction = (mongodbTime) => {
     const createdAt = new Date(mongodbTime);
     const currentTime = new Date();
     const timeDifference = currentTime - createdAt;
-    return Math.floor(timeDifference / (1000 * 24 * 60 * 60));
+    return Math.floor(timeDifference / (1000 * 60 * 60 * 24));
   };
 
   return (
@@ -24,8 +50,15 @@ const Job = ({ job }) => {
             ? 'Today'
             : `${daysAgoFunction(job?.createdAt)} days ago`}
         </p>
-        <Button variant="outline" className="rounded-full" size="icon">
-          <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
+        <Button
+          variant="outline"
+          className="rounded-full"
+          size="icon"
+          onClick={toggleSave}
+        >
+          <Bookmark
+            className={`w-4 h-4 sm:w-5 sm:h-5 ${saved ? 'fill-[#7209b7] text-[#7209b7]' : ''}`}
+          />
         </Button>
       </div>
 
@@ -70,7 +103,12 @@ const Job = ({ job }) => {
         >
           Details
         </Button>
-        <Button className="bg-[#7209b7] w-full sm:w-auto">Save For Later</Button>
+        <Button
+          className="bg-[#7209b7] w-full sm:w-auto"
+          onClick={toggleSave}
+        >
+          {saved ? 'Unsave' : 'Save For Later'}
+        </Button>
       </div>
     </div>
   );

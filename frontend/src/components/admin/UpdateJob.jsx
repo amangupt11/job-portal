@@ -7,16 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import useGetJobById from "@/hooks/useGetJobById";
 import { useSelector } from "react-redux";
 
 const UpdateJob = () => {
   const params = useParams();
   useGetJobById(params.id);
-  const [loading, setLoading] = React.useState(false);
-  const { singleJob } = useSelector((store) => store.job);
-  const navigate = useNavigate();
+
   const [input, setInput] = React.useState({
     title: "",
     description: "",
@@ -24,21 +22,85 @@ const UpdateJob = () => {
     salary: "",
     location: "",
     jobType: "",
-    experience: "",
+    experienceLevel: "",
+    position: "",
   });
+  const { singleJob } = useSelector((store) => store.job);
+  const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!singleJob) {
+      toast.error("Job data not loaded yet.");
+      return;
+    }
+    const formData = new FormData();
+   
+    if (input.title.trim() && input.title !== singleJob.title) {
+      formData.append("title", input.title);
+    }
+    if (
+      input.description.trim() &&
+      input.description !== singleJob.description
+    ) {
+      formData.append("description", input.description);
+    }
+    if (
+      input.requirements.trim() &&
+      input.requirements !== singleJob.requirements
+    ) {
+      formData.append("requirements", input.requirements);
+    }
+    if (input.salary > 1 && input.salary !== singleJob.salary) {
+      formData.append("salary", input.salary);
+    }
+
+    if (input.location.trim() && input.location !== singleJob.location) {
+      formData.append("location", input.location);
+    }
+    if (input.jobType.trim() && input.jobType !== singleJob.jobType) {
+      formData.append("jobType", input.jobType);
+    }
+    if (
+      input.experienceLevel.trim() &&
+      input.experienceLevel !== singleJob.experienceLevel
+    ) {
+      formData.append("experienceLevel", input.experienceLevel);
+    }
+    if (input.position && input.position !== singleJob.position) {
+      formData.append("position", input.position);
+    }
+    if (
+      !formData.has("title") &&
+      !formData.has("description") &&
+      !formData.has("requirements") &&
+      !formData.has("salary") &&
+      !formData.has("location") &&
+      !formData.has("jobType") &&
+      !formData.has("experienceLevel") &&
+      !formData.has("position")
+    ) {
+      toast.error("No changes to update");
+      return;
+    }
+
     try {
       setLoading(true);
-      const res = await axios.post(`${JOB_API_END_POINT}/update/${params.id}`, input, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
+      const res = await axios.put(
+        `${JOB_API_END_POINT}/update/${params.id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/admin/jobs");
@@ -50,17 +112,20 @@ const UpdateJob = () => {
     }
   };
 
-   useEffect(() => {
-      if (singleJob) {
-        setInput({
-          name: singleJob.name || "",
-          description: singleJob.description || "",
-          website: singleJob.website || "",
-          location: singleJob.location || "",
-          file: singleJob.file || null,
-        });
-      }
-    }, [singleJob]);
+  useEffect(() => {
+    if (singleJob) {
+      setInput({
+        title: singleJob.title || "",
+        description: singleJob.description || "",
+        requirements: singleJob.requirements?.join(", ") || "",
+        salary: singleJob.salary || "",
+        location: singleJob.location || "",
+        jobType: singleJob.jobType || "",
+        experienceLevel: singleJob.experienceLevel || "",
+        position: singleJob.position || "",
+      });
+    }
+  }, [singleJob]);
 
   return (
     <div>
@@ -69,19 +134,41 @@ const UpdateJob = () => {
           onSubmit={submitHandler}
           className="w-full max-w-5xl p-6 sm:p-8 border border-gray-200 shadow-lg rounded-md"
         >
-          <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
-            Update a Job
-          </h1>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-8">
+            <Button
+              type="button"
+              onClick={() => navigate("/admin/jobs")}
+              variant="outline"
+              className="flex items-center gap-2 text-gray-500 font-semibold"
+            >
+              <ArrowLeft />
+              <span>Back</span>
+            </Button>
+            <h1 className="font-bold text-2xl">Manage Job Applications</h1>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Label>Title</Label>
-              <Input
-                type="text"
+              <select
                 name="title"
                 value={input.title}
                 onChange={changeEventHandler}
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-              />
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="Frontend Developer">Frontend Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+                <option value="FullStack Developer">FullStack Developer</option>
+                <option value="Data Science engineer">
+                  Data Science engineer
+                </option>
+                <option value="AI/ML engineer">AI/ML engineer</option>
+                <option value="UI/UX Developer">UI/UX Developer</option>
+                <option value="Graphic Designer">Graphic Designer</option>
+                <option value="Android Developer">Android Developer</option>
+              </select>
             </div>
             <div>
               <Label>Job Description</Label>
@@ -104,7 +191,7 @@ const UpdateJob = () => {
               />
             </div>
             <div>
-              <Label>Salary</Label>
+              <Label>Salary (CTC)</Label>
               <Input
                 type="text"
                 name="salary"
@@ -112,6 +199,9 @@ const UpdateJob = () => {
                 onChange={changeEventHandler}
                 className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
               />
+              <p className="text-sm text-gray-500 mt-1">
+                Salary support in LPA
+              </p>
             </div>
             <div>
               <Label>Location</Label>
@@ -122,14 +212,13 @@ const UpdateJob = () => {
                 className="w-full p-2 border rounded-lg my-1"
               >
                 <option value="" disabled>
-                  Select a Location
+                  Select
                 </option>
-                <option value="Delhi NCR">Delhi NCR</option>
                 <option value="Bangalore">Bangalore</option>
                 <option value="Hyderabad">Hyderabad</option>
                 <option value="Pune">Pune</option>
-                <option value="Mumbai">Mumbai</option>
                 <option value="Gurugram">Gurugram</option>
+                <option value="Chennai">Chennai</option>
               </select>
             </div>
             <div>
@@ -141,7 +230,7 @@ const UpdateJob = () => {
                 className="w-full p-2 border rounded-lg my-1"
               >
                 <option value="" disabled>
-                  Select a Job Type
+                  Select
                 </option>
                 <option value="Full Time">Full Time</option>
                 <option value="Part Time">Part Time</option>
@@ -150,18 +239,26 @@ const UpdateJob = () => {
             </div>
             <div>
               <Label>Experience Level</Label>
-              <Input
-                type="text"
-                name="experience"
-                value={input.experience}
+              <select
+                name="experienceLevel"
+                value={input.experienceLevel}
                 onChange={changeEventHandler}
-                className="focus-visible:ring-offset-0 focus-visible:ring-0 my-1"
-              />
+                className="w-full p-2 border rounded-lg my-1"
+              >
+                <option value="" disabled>
+                  Select
+                </option>
+                <option value="Fresher">Fresher</option>
+                <option value="0 - 2 Years">0 - 2 Years</option>
+                <option value="2 - 5 Years">2 - 5 Years</option>
+                <option value="5 -10 Years">5 -10 Years</option>
+                <option value="10+ Years">10+ Years</option>
+              </select>
             </div>
             <div>
-              <Label>No. of Positions</Label>
+              <Label>No. of Opening Positions</Label>
               <Input
-                type="number"
+                type="text"
                 name="position"
                 value={input.position}
                 onChange={changeEventHandler}
@@ -176,7 +273,7 @@ const UpdateJob = () => {
             </Button>
           ) : (
             <Button type="submit" className="w-full my-6">
-              Update 
+              Update
             </Button>
           )}
         </form>

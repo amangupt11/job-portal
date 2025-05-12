@@ -17,6 +17,9 @@ import {
     'UI/UX Developer',
     'Graphic Designer',
     'FullStack Developer',
+    'Android Developer',
+    'AI/ML Engineer',
+    'DevOps Engineer'
   ];
   
   const CategoryCarousel = () => {

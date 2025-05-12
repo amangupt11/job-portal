@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
@@ -9,19 +8,15 @@ import { setSearchedQuery } from '@/redux/jobSlice';
 const filterData = [
   {
     filterType: 'Location',
-    array: ['Delhi NCR', 'Bangalore', 'Hyderabad', 'Pune', 'Mumbai', 'Gurugram'],
+    array: ['Bangalore', 'Hyderabad', 'Pune', 'Gurugram', 'Chennai'],
   },
   {
     filterType: 'Industry',
-    array: ['Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'Data Science'],
-  },
-  {
-    filterType: 'Salary',
-    array: ['Less 2 LPA', '2 LPA - 4 LPA', '4 LPA - 7 LPA', '7 LPA +'],
+    array: ['Frontend Developer', 'Backend Developer', 'FullStack Developer', 'Data Science engineer', 'AI/ML engineer'],
   },
   {
     filterType: 'Experience',
-    array: ['Fresher', '0 - 2 Years', '2 - 5 Years', '5 + Years'],
+    array: ['Fresher', '0 - 2 Years', '2 - 5 Years', '5 -10 Years', '10+ Years'],
   },
 ];
 
