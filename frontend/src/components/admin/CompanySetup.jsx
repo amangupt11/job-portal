@@ -69,6 +69,7 @@ const CompanySetup = () => {
       !formData.has("file")
     ) {
       toast.error("No changes to update");
+      navigate("/admin/companies");
       return;
     }
 
