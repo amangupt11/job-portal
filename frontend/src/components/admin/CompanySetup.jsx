@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -9,6 +11,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import useGetCompanyById from "@/hooks/useGetCompanyById";
+
+const selectClass =
+  "h-11 w-full rounded-lg border border-input bg-background px-3 text-sm shadow-xs transition-colors hover:border-primary/30 focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/30";
 
 const CompanySetup = () => {
   const params = useParams();
@@ -110,91 +115,65 @@ const CompanySetup = () => {
   }, [singleCompany]);
 
   return (
-    <div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <form onSubmit={submitHandler}>
-          {/* Top Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 mb-8">
-            <Button
-              type="button"
-              onClick={() => navigate("/admin/companies")}
-              variant="outline"
-              className="flex items-center gap-2 text-gray-500 font-semibold"
-            >
-              <ArrowLeft />
-              <span>Back</span>
-            </Button>
-            <h1 className="font-bold text-2xl">Company Setup</h1>
-          </div>
+    <div className="min-h-screen">
+      <Navbar />
+      <div className="mx-auto max-w-3xl animate-fade-in px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center gap-4">
+          <Button
+            type="button"
+            onClick={() => navigate("/admin/companies")}
+            variant="outline"
+            size="icon"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="font-display text-2xl font-bold tracking-tight">Company Setup</h1>
+        </div>
 
-          {/* Form Inputs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label>Company Name</Label>
-              <Input
-                type="text"
-                name="name"
-                value={input.name}
-                onChange={changeEventHandler}
-              />
+        <Card className="p-6 sm:p-8">
+          <form onSubmit={submitHandler}>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label>Company Name</Label>
+                <Input type="text" name="name" value={input.name} onChange={changeEventHandler} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Company Description</Label>
+                <Input type="text" name="description" value={input.description} onChange={changeEventHandler} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Website (URL)</Label>
+                <Input type="text" name="website" value={input.website} onChange={changeEventHandler} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Location</Label>
+                <select name="location" value={input.location} onChange={changeEventHandler} className={selectClass}>
+                  <option value="" disabled>Select</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Pune">Pune</option>
+                  <option value="Gurugram">Gurugram</option>
+                  <option value="Chennai">Chennai</option>
+                </select>
+              </div>
+              <div className="space-y-1.5 md:col-span-2">
+                <Label>Logo</Label>
+                <Input type="file" accept="image/*" onChange={changeFileHandler} className="cursor-pointer" />
+              </div>
             </div>
-            <div>
-              <Label>Company Description</Label>
-              <Input
-                type="text"
-                name="description"
-                value={input.description}
-                onChange={changeEventHandler}
-              />
-            </div>
-            <div>
-              <Label>Website (URL)</Label>
-              <Input
-                type="text"
-                name="website"
-                value={input.website}
-                onChange={changeEventHandler}
-              />
-            </div>
-            <div>
-              <Label>Location</Label>
-              <select
-                name="location"
-                value={input.location}
-                onChange={changeEventHandler}
-                className="w-full p-2 border rounded-lg"
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Hyderabad">Hyderabad</option>
-                <option value="Pune">Pune</option>
-                <option value="Gurugram">Gurugram</option>
-                <option value="Chennai">Chennai</option>
-              </select>
-            </div>
-            <div>
-              <Label>Logo</Label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={changeFileHandler}
-              />
-            </div>
-          </div>
 
-          {/* Submit Button */}
-          {loading ? (
-            <Button className="w-full my-6">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
-            </Button>
-          ) : (
-            <Button type="submit" className="w-full my-6">
-              Update
-            </Button>
-          )}
-        </form>
+            {loading ? (
+              <Button className="mt-8 w-full" disabled>
+                <Loader2 className="h-4 w-4 animate-spin" /> Please wait
+              </Button>
+            ) : (
+              <Button type="submit" variant="gradient" className="mt-8 w-full">
+                Update
+              </Button>
+            )}
+          </form>
+        </Card>
       </div>
     </div>
   );

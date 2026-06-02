@@ -19,11 +19,13 @@ const Home = () => {
     }
   }, []);
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <HeroSection />
-      <CategoryCarousel />
-      <LatestJobs />
+      <main className="flex-1 animate-fade-in">
+        <HeroSection />
+        <CategoryCarousel />
+        <LatestJobs />
+      </main>
       <Footer />
     </div>
   )

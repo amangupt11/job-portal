@@ -9,14 +9,20 @@ import {
   } from './ui/table';
   import { Badge } from './ui/badge';
   import { useSelector } from 'react-redux';
-  
+
+  const statusVariant = {
+    rejected: 'destructive',
+    pending: 'warning',
+    accepted: 'success',
+  };
+
   const AppliedJobTable = () => {
     const { allAppliedJobs } = useSelector((store) => store.job);
-  
+
     return (
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto rounded-lg border border-border">
         <Table className="min-w-[600px]">
-          <TableCaption>A list of your applied jobs</TableCaption>
+          <TableCaption className="pb-4">A list of your applied jobs</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
@@ -28,26 +34,18 @@ import {
           <TableBody>
             {allAppliedJobs.length <= 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  You haven&apos;t applied to any job.
+                <TableCell colSpan={4} className="py-10 text-center text-muted-foreground">
+                  You haven&apos;t applied to any job yet.
                 </TableCell>
               </TableRow>
             ) : (
               allAppliedJobs.map((appliedJob) => (
                 <TableRow key={appliedJob._id}>
-                  <TableCell>{appliedJob?.createdAt?.split('T')[0]}</TableCell>
-                  <TableCell>{appliedJob.job?.title}</TableCell>
+                  <TableCell className="text-muted-foreground">{appliedJob?.createdAt?.split('T')[0]}</TableCell>
+                  <TableCell className="font-medium">{appliedJob.job?.title}</TableCell>
                   <TableCell>{appliedJob.job?.company?.name}</TableCell>
                   <TableCell className="text-right">
-                    <Badge
-                      className={`${
-                        appliedJob?.status === 'rejected'
-                          ? 'bg-red-400'
-                          : appliedJob.status === 'pending'
-                          ? 'bg-gray-400'
-                          : 'bg-green-400'
-                      }`}
-                    >
+                    <Badge variant={statusVariant[appliedJob?.status] || 'secondary'}>
                       {appliedJob.status.toUpperCase()}
                     </Badge>
                   </TableCell>
@@ -59,6 +57,5 @@ import {
       </div>
     );
   };
-  
+
   export default AppliedJobTable;
-  

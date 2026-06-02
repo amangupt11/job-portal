@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { USER_API_END_POINT } from "@/utils/constant.js";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "@/redux/authSlice";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Check, X, GraduationCap, Briefcase } from "lucide-react";
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -63,7 +63,7 @@ const Signup = () => {
     }
     setInput({ ...input, [name]: value });
   };
-  
+
   const changeFileHandler = (e) => {
     setInput({ ...input, file: e.target.files?.[0] });
   };
@@ -105,164 +105,127 @@ const Signup = () => {
       dispatch(setLoading(false));
     }
   };
-  
+
   useEffect(() => {
     if (user) {
       navigate("/");
     }
   }, []);
 
+  const rules = [
+    { key: "length", label: "At least 8 characters" },
+    { key: "uppercase", label: "One uppercase letter" },
+    { key: "lowercase", label: "One lowercase letter" },
+    { key: "special", label: "One special character" },
+  ];
+
+  const roleOptions = [
+    { value: "student", label: "Student", icon: GraduationCap },
+    { value: "recruiter", label: "Recruiter", icon: Briefcase },
+  ];
+
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form
-          onSubmit={submitHandler}
-          className="w-full sm:w-4/5 md:w-3/4 lg:w-1/2 border border-gray-200 rounded-md p-4 sm:p-6 my-10"
-        >
-          <h1 className="font-bold text-xl mb-5 text-center">Sign Up</h1>
+      <div className="relative flex items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-60" />
+        <div className="pointer-events-none absolute -top-20 left-1/2 h-60 w-96 -translate-x-1/2 rounded-full bg-fuchsia-400/15 blur-3xl" />
 
-          <div className="my-2">
-            <Label>Full Name</Label>
-            <Input
-              type="text"
-              value={input.fullname}
-              name="fullname"
-              onChange={changeEventHandler}
-              placeholder="Enter your full name"
-            />
+        <Card className="relative w-full max-w-lg animate-scale-in p-6 shadow-lg sm:p-8">
+          <div className="mb-6 text-center">
+            <h1 className="font-display text-2xl font-bold tracking-tight">Create your account</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Join thousands finding their next opportunity</p>
           </div>
 
-          <div className="my-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              value={input.email}
-              name="email"
-              onChange={changeEventHandler}
-              placeholder="abc123@gmail.com"
-            />
-          </div>
+          <form onSubmit={submitHandler} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="fullname">Full Name</Label>
+              <Input id="fullname" type="text" value={input.fullname} name="fullname" onChange={changeEventHandler} placeholder="Enter your full name" />
+            </div>
 
-          <div className="my-2">
-            <Label>Phone Number</Label>
-            <Input
-              type="text"
-              value={input.phoneNumber}
-              name="phoneNumber"
-              onChange={changeEventHandler}
-              placeholder="1234567890"
-            />
-          </div>
-
-          <div className="my-2">
-            <Label>Password</Label>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                value={input.password}
-                name="password"
-                onChange={changeEventHandler}
-              />
-              <div
-                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" value={input.email} name="email" onChange={changeEventHandler} placeholder="you@example.com" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input id="phoneNumber" type="text" value={input.phoneNumber} name="phoneNumber" onChange={changeEventHandler} placeholder="10-digit number" />
               </div>
             </div>
 
-            <div className="mt-2 ml-2 text-sm">
-              <p
-                className={`${
-                  passwordRules.length ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {passwordRules.length ? "✅" : "❌"} At least 8 characters
-              </p>
-              <p
-                className={`${
-                  passwordRules.uppercase ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {passwordRules.uppercase ? "✅" : "❌"} One uppercase letter
-              </p>
-              <p
-                className={`${
-                  passwordRules.lowercase ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {passwordRules.lowercase ? "✅" : "❌"} One lowercase letter
-              </p>
-              <p
-                className={`${
-                  passwordRules.special ? "text-green-600" : "text-red-600"
-                }`}
-              >
-                {passwordRules.special ? "✅" : "❌"} One special character
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between my-4">
-            <RadioGroup className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center space-x-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
                 <Input
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={input.role === "student"}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={input.password}
+                  name="password"
                   onChange={changeEventHandler}
-                  className="cursor-pointer"
+                  className="pr-10"
                 />
-                <Label htmlFor="r1">Student</Label>
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
-              <div className="flex items-center space-x-2">
-                <Input
-                  type="radio"
-                  name="role"
-                  value="recruiter"
-                  checked={input.role === "recruiter"}
-                  onChange={changeEventHandler}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="r2">Recruiter</Label>
-              </div>
-            </RadioGroup>
 
-            <div className="flex items-center gap-2">
-              <Label>Profile</Label>
-              <Input
-                accept="image/*"
-                type="file"
-                onChange={changeFileHandler}
-                className="cursor-pointer"
-              />
+              <div className="mt-2 grid grid-cols-1 gap-1.5 rounded-lg bg-muted/50 p-3 sm:grid-cols-2">
+                {rules.map(({ key, label }) => (
+                  <p key={key} className={`flex items-center gap-1.5 text-xs ${passwordRules[key] ? "text-success" : "text-muted-foreground"}`}>
+                    {passwordRules[key] ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+                    {label}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full my-4"
-            disabled={!isPasswordValid() || loading}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
-              </>
-            ) : (
-              "Signup"
-            )}
-          </Button>
+            <div className="space-y-2">
+              <Label>I am a</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {roleOptions.map(({ value, label, icon: Icon }) => (
+                  <label
+                    key={value}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background p-3 text-sm font-medium transition-all hover:border-primary/40 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:text-primary"
+                  >
+                    <input
+                      type="radio"
+                      name="role"
+                      value={value}
+                      checked={input.role === value}
+                      onChange={changeEventHandler}
+                      className="sr-only"
+                    />
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </div>
 
-          <span className="text-sm block text-center">
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 underline">
-              Login
-            </Link>
-          </span>
-        </form>
+            <div className="space-y-1.5">
+              <Label htmlFor="profile">Profile Photo</Label>
+              <Input id="profile" accept="image/*" type="file" onChange={changeFileHandler} className="cursor-pointer" />
+            </div>
+
+            <Button type="submit" variant="gradient" className="w-full" disabled={!isPasswordValid() || loading}>
+              {loading ? (<><Loader2 className="h-4 w-4 animate-spin" /> Please wait</>) : "Sign up"}
+            </Button>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link to="/login" className="font-semibold text-primary hover:underline">
+                Login
+              </Link>
+            </p>
+          </form>
+        </Card>
       </div>
     </div>
   );
