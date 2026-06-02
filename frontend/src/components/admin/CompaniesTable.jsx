@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { Avatar, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Edit2, MoreHorizontal } from 'lucide-react';
+import { Building2, Edit2, MoreHorizontal } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,49 +32,61 @@ const CompaniesTable = () => {
   }, [companies, searchCompanyByText]);
 
   return (
-    <div className="w-full overflow-x-auto px-2 md:px-6">
-      <Table className="min-w-[600px] text-sm md:text-base">
-        <TableCaption className="text-xs md:text-sm">A list of your registered companies.</TableCaption>
+    <div className="w-full overflow-x-auto">
+      <Table className="min-w-[600px]">
+        <TableCaption className="pb-4">A list of your registered companies.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="whitespace-nowrap">Logo</TableHead>
-            <TableHead className="whitespace-nowrap">Name</TableHead>
-            <TableHead className="whitespace-nowrap">Date</TableHead>
-            <TableHead className="text-right whitespace-nowrap">Action</TableHead>
+            <TableHead>Logo</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filterCompany?.map((company) => (
-            <TableRow key={company._id} className="hover:bg-muted/50 transition">
-              <TableCell>
-                <Avatar className="h-8 w-8 md:h-10 md:w-10">
-                  <AvatarImage src={company.logo} />
-                </Avatar>
-              </TableCell>
-              <TableCell className="whitespace-nowrap">{company.name}</TableCell>
-              <TableCell className="whitespace-nowrap">{company.createdAt.split('T')[0]}</TableCell>
-              <TableCell className="text-right">
-                <Popover>
-                  <PopoverTrigger className="p-2 hover:bg-accent rounded">
-                    <MoreHorizontal className="w-5 h-5" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-32">
-                    <div
-                      onClick={() => navigate(`/admin/companies/${company._id}`)}
-                      className="flex items-center gap-2 w-fit cursor-pointer hover:text-primary"
-                    >
-                      <Edit2 className="w-4" />
-                      <span>Edit</span>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+          {(!filterCompany || filterCompany.length === 0) ? (
+            <TableRow>
+              <TableCell colSpan={4} className="py-12 text-center">
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <Building2 className="h-8 w-8 opacity-60" />
+                  <span>No companies yet. Add your first company to get started.</span>
+                </div>
               </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            filterCompany.map((company) => (
+              <TableRow key={company._id}>
+                <TableCell>
+                  <Avatar className="h-10 w-10 rounded-lg border border-border">
+                    <AvatarImage src={company.logo} className="rounded-lg object-contain p-1" />
+                    <AvatarFallback className="rounded-lg bg-primary/10 text-primary"><Building2 className="h-4 w-4" /></AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell className="font-medium">{company.name}</TableCell>
+                <TableCell className="text-muted-foreground">{company.createdAt.split('T')[0]}</TableCell>
+                <TableCell className="text-right">
+                  <Popover>
+                    <PopoverTrigger className="inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-accent">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-36 p-1" align="end">
+                      <button
+                        onClick={() => navigate(`/admin/companies/${company._id}`)}
+                        className="flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                        <span>Edit</span>
+                      </button>
+                    </PopoverContent>
+                  </Popover>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>
   );
-}; 
+};
 
 export default CompaniesTable;

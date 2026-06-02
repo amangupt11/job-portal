@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -79,79 +80,64 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
   return (
     <Dialog open={open}>
       <DialogContent
-        className="max-w-sm sm:max-w-md"
+        className="max-w-md"
         onInteractOutside={() => setOpen(false)}
       >
         <DialogHeader>
           <DialogTitle>Update Profile</DialogTitle>
+          <DialogDescription>Keep your details current so recruiters can reach you.</DialogDescription>
         </DialogHeader>
         <form onSubmit={submitHandler}>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-2">
             {[
-              { label: "Name", name: "fullname", type: "text" },
+              { label: "Full Name", name: "fullname", type: "text" },
               { label: "Email", name: "email", type: "email" },
-              { label: "Number", name: "phoneNumber", type: "text" },
+              { label: "Phone Number", name: "phoneNumber", type: "text" },
               { label: "Bio", name: "bio", type: "text" },
-              { label: "Skills", name: "skills", type: "text" },
+              { label: "Skills (comma separated)", name: "skills", type: "text" },
             ].map((field) => (
-              <div
-                key={field.name}
-                className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4"
-              >
-                <Label
-                  htmlFor={field.name}
-                  className="text-left sm:text-right capitalize"
-                >
-                  {field.label}
-                </Label>
+              <div key={field.name} className="space-y-1.5">
+                <Label htmlFor={field.name}>{field.label}</Label>
                 <Input
                   id={field.name}
                   name={field.name}
                   type={field.type}
                   value={input[field.name] || ""}
                   onChange={changeEventHandler}
-                  className="sm:col-span-3"
                 />
               </div>
             ))}
 
             {/* Resume field separately handled */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="file"
-                className="text-left sm:text-right capitalize"
-              >
-                Resume
-              </Label>
-              <div className="sm:col-span-3 space-y-2">
-                <Input
-                  id="file"
-                  name="file"
-                  type="file"
-                  accept="application/pdf"
-                  onChange={fileChangeHandler}
-                />
-                {user?.profile?.resume && (
-                  <a
-                    href={user.profile.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-600 underline"
-                  >
-                    View current resume
-                  </a>
-                )}
-              </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="file">Resume (PDF)</Label>
+              <Input
+                id="file"
+                name="file"
+                type="file"
+                accept="application/pdf"
+                onChange={fileChangeHandler}
+              />
+              {user?.profile?.resume && (
+                <a
+                  href={user.profile.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-sm font-medium text-primary hover:underline"
+                >
+                  View current resume
+                </a>
+              )}
             </div>
           </div>
           <DialogFooter>
             {loading ? (
-              <Button className="w-full my-4" disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+              <Button className="my-2 w-full" disabled>
+                <Loader2 className="h-4 w-4 animate-spin" /> Please wait
               </Button>
             ) : (
-              <Button type="submit" className="w-full my-4">
-                Update
+              <Button type="submit" variant="gradient" className="my-2 w-full">
+                Save Changes
               </Button>
             )}
           </DialogFooter>

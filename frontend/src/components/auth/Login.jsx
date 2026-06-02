@@ -4,18 +4,16 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
 import { USER_API_END_POINT } from "@/utils/constant.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice.js";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Loader2, GraduationCap, Briefcase } from "lucide-react";
 import { Eye, EyeOff } from "lucide-react";
-
-
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -81,121 +79,123 @@ const Login = () => {
     }
   }, []);
 
+  const roleOptions = [
+    { value: "student", label: "Student", icon: GraduationCap },
+    { value: "recruiter", label: "Recruiter", icon: Briefcase },
+  ];
+
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
-      <div className="flex items-center justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form
-          onSubmit={submitHandler}
-          className="w-full sm:w-4/5 md:w-3/4 lg:w-1/2 border border-gray-200 rounded-md p-4 sm:p-6 my-10"
-        >
-          <h1 className="font-bold text-xl mb-5 text-center">Login</h1>
+      <div className="relative flex items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-60" />
+        <div className="pointer-events-none absolute -top-20 left-1/2 h-60 w-96 -translate-x-1/2 rounded-full bg-primary/15 blur-3xl" />
 
-          <div className="my-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              placeholder="abc123@gmail.com"
-              value={input.email}
-              name="email"
-              onChange={changeEventHandler}
-            />
+        <Card className="relative w-full max-w-md animate-scale-in p-6 shadow-lg sm:p-8">
+          <div className="mb-6 text-center">
+            <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Log in to continue your job search</p>
           </div>
 
-          <div className="my-2">
-            <Label>Password</Label>
-            <div className="relative">
+          <form onSubmit={submitHandler} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
               <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
-                value={input.password}
-                name="password"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={input.email}
+                name="email"
                 onChange={changeEventHandler}
               />
-              <div
-                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={input.password}
+                  name="password"
+                  onChange={changeEventHandler}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
-          </div>
 
-          <div className="my-2">
-            <Label>Confirm Password</Label>
-            <div className="relative">
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm password"
-                value={input.confirmPassword}
-                name="confirmPassword"
-                onChange={changeEventHandler}
-              />
-              <div
-                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              >
-                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm password"
+                  value={input.confirmPassword}
+                  name="confirmPassword"
+                  onChange={changeEventHandler}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {input.confirmPassword && (
+                <p className={`text-sm ${doPasswordsMatch ? "text-success" : "text-destructive"}`}>
+                  {doPasswordsMatch ? "Passwords match" : "Passwords do not match"}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>I am a</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {roleOptions.map(({ value, label, icon: Icon }) => (
+                  <label
+                    key={value}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background p-3 text-sm font-medium transition-all hover:border-primary/40 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:text-primary"
+                  >
+                    <input
+                      type="radio"
+                      name="role"
+                      value={value}
+                      checked={input.role === value}
+                      onChange={changeEventHandler}
+                      className="sr-only"
+                    />
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </label>
+                ))}
               </div>
             </div>
-            {input.confirmPassword && (
-              <p
-                className={`text-sm mt-1 ${
-                  doPasswordsMatch ? "text-green-600" : "text-red-500"
-                }`}
-              >
-                {doPasswordsMatch
-                  ? "Passwords match ✅"
-                  : "Passwords do not match ❌"}
-              </p>
-            )}
-          </div>
 
-          <div className="my-4">
-            <Label className="block mb-2">Role</Label>
-            <RadioGroup className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center space-x-2">
-                <Input
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={input.role === "student"}
-                  onChange={changeEventHandler}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="r1">Student</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Input
-                  type="radio"
-                  name="role"
-                  value="recruiter"
-                  checked={input.role === "recruiter"}
-                  onChange={changeEventHandler}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="r2">Recruiter</Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {loading ? (
-            <Button className="w-full my-4" disabled>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+            <Button type="submit" variant="gradient" className="w-full" disabled={!canSubmit || loading}>
+              {loading ? (<><Loader2 className="h-4 w-4 animate-spin" /> Please wait</>) : "Login"}
             </Button>
-          ) : (
-            <Button type="submit" className="w-full my-4" disabled={!canSubmit}>
-              Login
-            </Button>
-          )}
 
-          <span className="text-sm block text-center">
-            Don&apos;t have an account?{" "}
-            <Link to="/signup" className="text-blue-900 underline">
-              Signup
-            </Link>
-          </span>
-        </form>
+            <p className="text-center text-sm text-muted-foreground">
+              Don&apos;t have an account?{" "}
+              <Link to="/signup" className="font-semibold text-primary hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </form>
+        </Card>
       </div>
     </div>
   );
