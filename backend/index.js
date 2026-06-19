@@ -27,6 +27,9 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
+app.get("/health", (req, res) => {
+    res.send("job-portal backend is running")
+});
 //Routes
 app.use("/api/v1/user",userRoute);
 app.use("/api/v1/company",companyRoute);
