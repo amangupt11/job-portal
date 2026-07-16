@@ -79,6 +79,15 @@ export const updateCompany = async (req, res) => {
       if (description) updateData.description = description;
       if (website) updateData.website = website;
       if (location) updateData.location = location;
+
+    const {companyLogo} = req.file;
+    if(!comapnyLogo) {
+            return res.status(400).json({
+                message: "image is required",
+                success: false,
+            })
+                
+        }
   
       // Only handle logo if a file is provided
       if (req.file) {
@@ -86,6 +95,7 @@ export const updateCompany = async (req, res) => {
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         updateData.logo = cloudResponse.secure_url;
       }
+        
   
       const company = await Company.findByIdAndUpdate(req.params.id, updateData, {
         new: true,
